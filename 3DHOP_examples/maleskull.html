@@ -1,0 +1,284 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	
+<meta charset="UTF-8">
+<meta name="author" content="Terrie Simmons-Ehrhardt">
+<title>Male Skull</title>
+<!--STYLESHEET-->
+<link type="text/css" rel="stylesheet" href="stylesheet/3dhop.css"/>
+<link type="text/css" rel="stylesheet" href="stylesheet/bonemodels.css"/>   
+<link type="text/css" rel="stylesheet" href="stylesheet/w3.css"/>
+<link type="text/css" rel="stylesheet" href="stylesheet/w3-theme-dark-grey.css"/>
+
+<script type="text/javascript" src="js/jscolor.js"></script>
+<!--SPIDERGL-->
+<script type="text/javascript" src="js/spidergl.js"></script>
+
+<!--JQUERY-->
+<script type="text/javascript" src="js/jquery.js"></script>
+<!--PRESENTER-->
+<script type="text/javascript" src="js/presenter.js"></script>
+<!--3D MODELS LOADING AND RENDERING-->
+<script type="text/javascript" src="js/nexus.js"></script>
+<script type="text/javascript" src="js/ply.js"></script>
+<!--TRACKBALLS-->
+<script type="text/javascript" src="js/trackball_sphere.js"></script>
+<script type="text/javascript" src="js/trackball_turntable.js"></script>
+<script type="text/javascript" src="js/trackball_turntable_pan.js"></script>
+<script type="text/javascript" src="js/trackball_pantilt.js"></script>
+<!--UTILITY-->
+<script type="text/javascript" src="js/init.js"></script>
+
+
+</head>
+
+<body>
+		
+<div id="3dhop" class="tdhop" onmousedown="if (event.preventDefault) event.preventDefault()" style="width: 100%; height: 100%;">
+	<div id="tdhlg">Powered by 3DHOP<br>&nbsp;C.N.R. &nbsp;–&nbsp; I.S.T.I.</div>
+
+	<div id="help_pane" class="w3-modal" style="display:none" title="Help box">
+		<div class="w3-modal-content" style="width:50%;">
+			<div class="w3-container w3-black w3-opacity-min" ><span title="Close Help" onclick="closeHelp()" class="w3-button w3-xlarge w3-display-topright">&times;</span>
+				<p>* Hover cursor over toolbar icons and buttons to see functions.</p>
+				<p>* Left-click and drag on model to rotate.</p>
+				<p>* Hold right button or hold scroll wheel and drag to move/pan.</p>
+				<p>* Models: Toggle transparency and/or color.</p>
+				<p><img src="skins/light/home.png"> Return to home position and lighting.</p>
+				<p><img src="skins/light/zoomin.png"><img src="skins/light/zoomout.png"> Zoom in/Zoom out (also scroll wheel).</p>
+				<p><img src="skins/light/lightcontrol_on.png"><img src="skins/light/lightcontrol.png"> Light control: click on and drag mouse across model to adjust lighting.</p>
+				<p><img src="skins/light/pick.png" > Pick point mode: left-click on model to pick landmarks. Points will copy to the "Log Points" box.</p>
+				<p><img src="skins/light/measure.png" > Measure tool: left-click 2 points on the model to get a distance. Distance will copy to the "Log Distances" box.</p>
+				<p><img src="skins/light/sections.png" > Clipping tool: select x-, y-, or z-planes to clip skull. Use slider to adjust plane position.</p>
+				<p>Preset views:
+					<img src="skins/light/ant_y.png" > Anterior 
+					<img src="skins/light/left_y.png"> Left profile 
+					<img src="skins/light/right_y.png"> Right profile 
+					<img src="skins/light/inf_y.png"> Inferior 
+					<img src="skins/light/sup_y.png"> Superior
+				</p>
+				<p><img src="skins/light/screenshot.png"> Save screenshot.</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="toolbar">
+		<img id="home" title="Home" src="skins/light/home.png"><br>
+		<img id="zoomin" title="Zoom In" src="skins/light/zoomin.png" style="opacity: 0.5;"><br>
+		<img id="zoomout" title="Zoom Out" src="skins/light/zoomout.png" style="opacity: 0.5;"><br>
+		<img id="light_on"    title="Disable Light Control"  src="skins/light/lightcontrol_on.png" style="position:absolute; visibility:hidden;"/>
+		<img id="light"       title="Enable Light Control"   src="skins/light/lightcontrol.png"/><br>
+		<img id="pick_on"    		title="Disable PickPoint Mode"			src="skins/light/pick_on.png" 		style="position:absolute; visibility:hidden;"/>
+		<img id="pick"       		title="Enable PickPoint Mode" 			src="skins/light/pick.png"/><br>
+		<img id="measure_on" 		title="Disable Measure Tool"  			src="skins/light/measure_on.png" 	style="position:absolute; visibility:hidden;"/>
+		<img id="measure"    		title="Enable Measure Tool"   			src="skins/light/measure.png"/><br>
+		<img id="sections_on" 	title="Disable Plane Sections" 			src="skins/light/sections_on.png" 	style="position:absolute; visibility:hidden;"/>
+		<img id="sections"    	title="Enable Plane Sections"  			src="skins/light/sections.png" /><br>
+		<img id="screenshot" title="Save Screenshot"   src="skins/light/screenshot.png"/><br>
+	</div>
+
+	<div id="pickpoint-box" class="output-box">XYZ picked point<hr/><span id="pickpoint-output" class="output-text" onmousedown="event.stopPropagation()">[ 0 , 0 , 0 ]</span></div>
+	<div id="measure-box" class="output-box">Measured length (mm)<hr/><span id="measure-output" class="output-text" onmousedown="event.stopPropagation()">0.0</span></div>
+
+	<div id="sections-box" class="output-box">
+		<table class="output-table" onmousedown="event.stopPropagation()">
+			<tr><td>Plane</td><td>Position</td><td>Flip</td></tr>
+			<tr><td><hr/></td><td><hr/></td><td><hr/></td></tr>
+			<tr>
+				<td><img   id="xplane_on"    title="Disable X Axis Section" src="skins/icons/sectionX_on.png" onclick="sectionxSwitch()" style="position:absolute; visibility:hidden; border:1px inset;"/>
+					<img   id="xplane"       title="Enable X Axis Section"  src="skins/icons/sectionX.png"  onclick="sectionxSwitch()"/><br/></td>
+				<td><input id="xplaneSlider" class="output-input"  type="range" title="Move X Axis Section Position"/></td> 
+				<td><input id="xplaneFlip"   class="output-input"  type="checkbox" title="Flip X Axis Section Direction"/></td>
+				</tr>
+			<tr>
+				<td><img   id="yplane_on"    title="Disable Y Axis Section" src="skins/icons/sectionY_on.png" onclick="sectionySwitch()" style="position:absolute; visibility:hidden; border:1px inset;"/>
+					<img   id="yplane"       title="Enable Y Axis Section"  src="skins/icons/sectionY.png"  onclick="sectionySwitch()"/><br/></td>
+				<td><input id="yplaneSlider" class="output-input"  type="range"    title="Move Y Axis Section Position"/></td> 
+				<td><input id="yplaneFlip"   class="output-input"  type="checkbox" title="Flip Y Axis Section Direction"/></td></tr>
+			<tr>
+				<td><img   id="zplane_on"    title="Disable Z Axis Section" src="skins/icons/sectionZ_on.png" onclick="sectionzSwitch()" style="position:absolute; visibility:hidden; border:1px inset;"/>
+					<img   id="zplane"       title="Enable Z Axis Section"  src="skins/icons/sectionZ.png"  onclick="sectionzSwitch()"/><br/></td>
+				<td><input id="zplaneSlider" class="output-input"  type="range"    title="Move Y Axis Section Position"/></td> 
+				<td><input id="zplaneFlip"   class="output-input"  type="checkbox" title="Flip Z Axis Section Direction"/></td></tr>
+		</table>
+		<table class="output-table" onmousedown="event.stopPropagation()" style="text-align:right;">
+			<tr>
+			<td>Show planes<input id="showPlane" class="output-input" type="checkbox" title="Show Section Planes"/></td>
+			<td>Show edges<input  id="showBorder" class="output-input" type="checkbox" title="Show Section Edges"/></td></tr>
+		</table>
+	</div>
+
+	<div class="w3-card-4 w3-theme-d5" id="rightsidebar">
+		<div class="w3-container w3-small ">
+			<p>Model:</p>
+				<div class="w3-bar">
+					<img src="skins/light/trans_y.png" alt="Toggle Model Transparency" class="w3-opacity w3-hover-opacity-off" onclick="presenter.toggleInstanceTransparencyByName('Model', true);">
+					<input type="button" class="jscolor {closable:true,closeText:'Close'} w3-button w3-round "  onchange="updateModel(this.jscolor)" title="Change Model Color" value="ffffff" >
+					<button class="w3-button w3-white w3-round"    title="Reset Model Color"  onclick="presenter.setInstanceSolidColorByName('Model', true, true, [1.0, 1.0, 1.0]);">Reset</button>	
+				</div>
+		</div>
+			
+		<div class="w3-container w3-small ">
+			<p>Views:</p>
+				<div class="w3-bar">
+					<img src="skins/light/ant_y.png" alt="Anterior" class="w3-opacity w3-hover-opacity-off" onclick="presenter.animateToTrackballPosition([1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]);" >
+					<img src="skins/light/left_y.png" alt="Left Profile" class="w3-opacity w3-hover-opacity-off"  onclick="presenter.animateToTrackballPosition([0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]);">
+					<img  src="skins/light/right_y.png" alt="Right Profile"   class="w3-opacity w3-hover-opacity-off" onclick="presenter.animateToTrackballPosition([0.0, 0.0, -1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]);">
+					<img  src="skins/light/inf_y.png" alt="Inferior"  class="w3-opacity w3-hover-opacity-off" onclick="presenter.animateToTrackballPosition([1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);">
+					<img src="skins/light/sup_y.png" alt="Superior" class="w3-opacity w3-hover-opacity-off"  onclick="presenter.animateToTrackballPosition([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);" >
+				</div>
+		</div>
+		
+		<div class="w3-container w3-small">
+			<p>Canvas:</p>
+				<div class="w3-bar">
+					<input class="jscolor {closable:true,closeText:'Close'} w3-button w3-padding-small w3-left w3-round" style="width:49%;" onchange="updateCanvas(this.jscolor)" value="ffffff" title="Change Background Color" >
+					<button class="w3-button w3-padding-small w3-right w3-round" title="Reset Background Color" style="background-color: rgb(41, 41, 41); width:49%;" onclick="resetCanvas();">Reset</button>
+				</div>	
+		</div>
+	
+		<div class="w3-container w3-section w3-small">
+			<textarea id="log-pts"  name="Log Picked Points" placeholder="(Log Points)" style="width:100%; height:100px; resize: none; overflow:auto;"></textarea>
+			<button class="w3-button w3-theme-l3  w3-padding-small w3-left" style="width:49%;" title="Copy Points to Clipboard"   onclick="copyPts()" >Copy Points</button>
+			<button class="w3-button w3-theme-l3  w3-padding-small w3-right"   style="width:49%;" title="Clear Points"   onclick="document.getElementById('log-pts').value = ''" >Clear Points</button>		
+		</div>
+		
+		<div class="w3-container w3-section w3-small">
+			<textarea id="log-dist"  name="Log Distances" placeholder="(Log Distances)" style="width:100%; height:100px; resize: none; overflow:auto;"></textarea>
+			<button class="w3-button w3-theme-l3 w3-padding-small w3-left" style="width:49%;" title="Copy Distances to Clipboard"  onclick="copyDist()" >Copy Distances</button>
+			<button class="w3-button w3-theme-l3 w3-padding-small w3-right"  title="Clear Distances" style="width:49%;" onclick="document.getElementById('log-dist').value = ''" >Clear Distances</button>		
+		</div>
+
+		<div class="w3-container w3-section">
+			<button class="w3-button w3-theme-d1 w3-block w3-padding-small" title="Show Help" onclick="showHelp()" >Help</button>
+		</div>
+		
+	</div>	
+
+ 	<canvas id="draw-canvas" style="background-color: rgb(41, 41, 41);"></canvas>
+
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+var presenter = null;
+
+function setup3dhop() { 
+	presenter = new Presenter("draw-canvas");
+
+	presenter.setScene({
+		meshes: {
+			"Model"     : {url: "models/c0476_skull.ply"}			
+		},
+		modelInstances : {
+			"Model" : {
+				mesh : "Model",
+				useSolidColor: true,
+				color: [1.0, 1.0, 1.0],
+				clippable: true		
+			}			
+			},			
+		space: {
+			cameraType: "orthographic",
+			centerMode: "scene",
+			radiusMode: "scene"
+		},
+		config : {
+			showClippingPlanes  : true,
+			showClippingBorder  : true,
+			clippingBorderSize  : 0.5,
+			clippingBorderColor : [0.0, 1.0, 1.0],
+			pointSize: 4.0
+		},
+		trackball : {
+			type: SphereTrackball
+			}	
+		
+		
+	});
+
+	presenter._onEndPickingPoint = onEndPick;
+	presenter._onEndMeasurement = onEndMeasure;
+	
+
+	
+
+}
+
+function actionsToolbar(action) {
+	if(action=='home') presenter.resetTrackball(); 
+	else if(action=='zoomin') presenter.zoomIn(); 
+	else if(action=='zoomout') presenter.zoomOut(); 
+	else if(action=='light' || action=='light_on') { presenter.enableLightTrackball(!presenter.isLightTrackballEnabled()); lightSwitch(); }
+	else if(action=='pick' || action=='pick_on') { presenter.enablePickpointMode(!presenter.isPickpointModeEnabled()); pickpointSwitch(); } 
+	else if(action=='measure' || action=='measure_on') { presenter.enableMeasurementTool(!presenter.isMeasurementToolEnabled()); measureSwitch(); } 
+	else if(action=='sections' || action=='sections_on') { sectiontoolReset(); sectiontoolSwitch(); } 
+	else if(action=='screenshot') presenter.saveScreenshot();
+}
+
+function onEndPick(point) {
+	var x = point[0].toFixed(2);
+	var y = point[1].toFixed(2);
+	var z = point[2].toFixed(2);
+    $('#pickpoint-output').html("[ "+x+" , "+y+" , "+z+" ]");
+		document.getElementById("log-pts").innerHTML += "* "+x+", "+y+", "+z+"" + "\n";
+
+}
+
+
+function onEndMeasure(measure) {
+	var dist = measure.toFixed(2);
+	$('#measure-output').html(" "+dist+" mm");
+	document.getElementById("log-dist").innerHTML += "* "+dist+"" + " mm" + "\n";
+	
+}
+
+function copyPts() {
+	var copyPts = document.getElementById("log-pts");
+	copyPts.select();
+	document.execCommand("copy");
+	alert("Copied the text: " + copyPts.value);
+}
+
+function copyDist() {
+	var copyDist = document.getElementById("log-dist");
+	copyDist.select();
+	document.execCommand("copy");
+	alert("Copied the text: " + copyDist.value);
+}
+
+function updateModel(picker){
+	var lclR = (Math.round(picker.rgb[0]) / 255).toFixed(1);
+	var lclG = (Math.round(picker.rgb[1]) / 255).toFixed(1);
+	var lclB = (Math.round(picker.rgb[2]) / 255).toFixed(1);
+
+	presenter.setInstanceSolidColorByName('Model', true, true, [lclR, lclG, lclB]);
+}
+
+function updateCanvas(picker) {
+	document.getElementById("draw-canvas").style.backgroundColor = "rgb(" + picker.rgb[0] + "," + picker.rgb[1] + "," + picker.rgb[2] + ")";
+}
+function resetCanvas() {
+	document.getElementById("draw-canvas").style.backgroundColor = "rgb(41, 41, 41)";
+}
+function showHelp() {
+	document.getElementById("help_pane").style.display = "block";
+}
+function closeHelp() {
+	document.getElementById("help_pane").style.display = "none";
+}
+
+$(document).ready(function(){
+	init3dhop();
+
+	setup3dhop();
+
+	sectiontoolInit();	
+});
+</script>
+
+</html>
