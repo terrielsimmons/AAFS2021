@@ -8,7 +8,7 @@ This repository contains supplemental material for my poster at the American Aca
 Below are brief descriptions of the resources discussed in the poster, along with links to the examples.
 
 ## [3DHOP](https://github.com/cnr-isti-vclab/3DHOP)
-Customized [3DHOP examples](3DHOP_examples/index.md) are provided to demonstrate single model viewing and multiple model viewing, with features such as transparency, multi-plane cross-sectioning, model color adjustments, anatomical views, landmarking, and measurements. Model color picker was added using [jscolor.js](https://jscolor.com/).
+Customized [3DHOP examples](https://terrielsimmons.github.io/AAFS2021/3DHOP_examples/index) are provided to demonstrate single model viewing and multiple model viewing, with features such as transparency, multi-plane cross-sectioning, model color adjustments, anatomical views, landmarking, and measurements. Model color picker was added using [jscolor.js](https://jscolor.com/).
 
 ![3dhop_multipart](img/3dhop_multipart.png "3d hop image")
 
