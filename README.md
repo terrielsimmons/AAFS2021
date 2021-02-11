@@ -62,6 +62,11 @@ Model viewers on Sketchfab can be embedded in external web pages by anyone, even
 
 Additional features for the viewers require upgraded accounts.
 
+[Example](SketchfabBones.html)
+
+![sketchfab_page](img/sketchfab_page.png "sketchfab page example")
+
+
 ## [RShiny](https://shiny.rstudio.com/)
 **HTML** documents that contain 3D data can be attached to R Shiny applications by installing libraries (shiny, [rgl](https://cran.r-project.org/web/packages/rgl/index.html), [htmltools](https://github.com/rstudio/htmltools), [htmlwidgets](https://shiny.rstudio.com/articles/htmlwidgets.html)) and directing the application to the HTML page.
 
