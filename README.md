@@ -2,7 +2,7 @@ This repository contains supplemental material for my poster at the American Aca
 
 **Section Links:**
 
-[3DHOP](#3dhop) | [Three.js](#threejs) | [VTK.js](#vtkjs) | [OpenAnatomy](#openanatomy) | [XTK](#stk) | [Sketchfab](#sketchfab) | [RShiny](#rshiny) | [Summary](#summary) | [References](#references)
+[3DHOP](#3dhop) | [Three.js](#threejs) | [VTK.js](#vtkjs) | [OpenAnatomy](#openanatomy) | [XTK](#xtk) | [Sketchfab](#sketchfab) | [RShiny](#rshiny) | [Summary](#summary) | [References](#references)
 
 # Example Data
 Below are brief descriptions of the resources discussed in the poster, along with links to the examples.
