@@ -13,9 +13,9 @@ Customized [3DHOP examples](3DHOP_examples/index) are provided to demonstrate si
 ![3dhop_multipart](img/3dhop_multipart.png "3d hop image")
 
 Example models include:
-- a [female skull](https://terrielsimmons.github.io/AAFS2021/3DHOP_examples/femaleskull.html),
-- a [male skull](https://terrielsimmons.github.io/AAFS2021/3DHOP_examples/maleskull.html),
-- and a [multi-bone model](https://terrielsimmons.github.io/AAFS2021/3DHOP_examples/multi_example.html).
+- a [female skull](3DHOP_examples/femaleskull.html),
+- a [male skull](3DHOP_examples/maleskull.html),
+- and a [multi-bone model](3DHOP_examples/multi_example.html).
 
 Included models are in **PLY** format. Large file sizes (such as microCT) may be compressed to a [NXS or NXZ](http://vcg.isti.cnr.it/nexus/) format.
 
